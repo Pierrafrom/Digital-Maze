@@ -1,0 +1,87 @@
+# Unity-specific
+*.unity binary
+*.prefab binary
+*.FBX binary
+*.fbx binary
+*.audio binary
+*.physicMaterial binary
+*.asset binary
+*.meta binary
+*.mat binary
+*.anim binary
+*.controller binary
+*.cubemap binary
+*.flare binary
+*.fontsettings binary
+*.giparams binary
+*.mask binary
+*.mixer binary
+*.overlay binary
+*.playable binary
+*.rendertexture binary
+*.shader binary
+*.shadervariants binary
+*.spriteatlas binary
+
+# Large binaries that should be tracked by LFS
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.ai filter=lfs diff=lfs merge=lfs -text
+*.tiff filter=lfs diff=lfs merge=lfs -text
+*.tif filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.bmp filter=lfs diff=lfs merge=lfs -text
+*.gif filter=lfs diff=lfs merge=lfs -text
+*.tga filter=lfs diff=lfs merge=lfs -text
+*.exr filter=lfs diff=lfs merge=lfs -text
+*.3ds filter=lfs diff=lfs merge=lfs -text
+*.dxf filter=lfs diff=lfs merge=lfs -text
+*.mov filter=lfs diff=lfs merge=lfs -text
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.ogg filter=lfs diff=lfs merge=lfs -text
+
+# Misc - large or binary
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.gz filter=lfs diff=lfs merge=lfs -text
+*.rar filter=lfs diff=lfs merge=lfs -text
+*.tar filter=lfs diff=lfs merge=lfs -text
+
+# Shader Graphs
+*.ShaderGraph filter=lfs diff=lfs merge=lfs -text
+
+# TextMesh Pro files
+*.TMP filter=lfs diff=lfs merge=lfs -text
+
+# Models and animations
+*.blend filter=lfs diff=lfs merge=lfs -text
+*.obj filter=lfs diff=lfs merge=lfs -text
+*.dae filter=lfs diff=lfs merge=lfs -text
+*.stl filter=lfs diff=lfs merge=lfs -text
+*.fbx filter=lfs diff=lfs merge=lfs -text
+*.ma filter=lfs diff=lfs merge=lfs -text
+*.mb filter=lfs diff=lfs merge=lfs -text
+
+# Audio
+*.aif filter=lfs diff=lfs merge=lfs -text
+
+# Textures
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+
+# Other
+*.bytes filter=lfs diff=lfs merge=lfs -text
+
+# Ensure that text files are normalized to LF line endings on checkout.
+*.cs text eol=lf
+*.shader text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+
+# Custom project-specific formats
+*.myformat filter=lfs diff=lfs merge=lfs -text
+
+# Add or remove file extensions as needed for your project.
