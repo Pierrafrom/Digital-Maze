@@ -30,7 +30,7 @@ namespace PixelArtTopDown_Basic.Script
                 _animator.SetInteger(Direction, 2);
             }
 
-            if (Input.GetKey(KeyCode.W))
+            else if (Input.GetKey(KeyCode.W))
             {
                 dir.y = 1;
                 _animator.SetInteger(Direction, 1);
@@ -39,6 +39,11 @@ namespace PixelArtTopDown_Basic.Script
             {
                 dir.y = -1;
                 _animator.SetInteger(Direction, 0);
+            }
+            else{
+                dir.x = 0;
+                dir.y = 0;
+                _animator.SetInteger(Direction,4);
             }
 
             dir.Normalize();
