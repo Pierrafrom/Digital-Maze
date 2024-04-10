@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 namespace PixelArtTopDown_Basic.Script
 {
@@ -21,10 +22,15 @@ namespace PixelArtTopDown_Basic.Script
 
         private void Update()
         {
-            i++;
+
+            if(i!=0){
+                i++;
+            }
             int temps = i%20000;
             Vector2 dir = Vector2.zero;
-            if(temps <= 5000){
+            RaycastHit2D hit;
+
+            if(temps <= 5000 && temps >0){
                 dir.x = 1;
             }
             else if (5000 <temps && temps <=10000){
@@ -33,8 +39,12 @@ namespace PixelArtTopDown_Basic.Script
             else if(10000 < temps && temps <=15000){
                 dir.y = 1;
             }
-            else{
+            else if(15000< temps && temps <=20000){
                 dir.y = -1;
+            }
+            else{
+                dir.x = 0;
+                dir.y = 0;
             }
             if (dir.x == -1)
             {
@@ -56,6 +66,18 @@ namespace PixelArtTopDown_Basic.Script
             }
             else{
                 _animator.SetInteger(Direction,4);
+            }
+
+            hit = Physics2D.Raycast(transform.position,transform.right,10f);
+            if(hit.collider.name == "PF Player"){
+                Debug.DrawRay(transform.position,hit.point,Color.red);
+                Debug.Log(hit.collider.name);
+                i = 0;
+                //problème à résoudre
+            }
+            else{
+                Debug.DrawRay(transform.position,transform.position+transform.right*10f,Color.yellow);
+                Debug.Log("pas touché");
             }
 
             dir.Normalize();
