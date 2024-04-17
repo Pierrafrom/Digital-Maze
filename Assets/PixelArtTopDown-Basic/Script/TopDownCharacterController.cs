@@ -47,7 +47,6 @@ namespace PixelArtTopDown_Basic.Script
             }
 
             dir.Normalize();
-            _animator.SetBool(IsMoving, dir.magnitude > 0);
 
             GetComponent<Rigidbody2D>().velocity = speed * dir;
         }

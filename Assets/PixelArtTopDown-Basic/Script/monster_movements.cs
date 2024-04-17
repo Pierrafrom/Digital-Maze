@@ -77,11 +77,9 @@ namespace PixelArtTopDown_Basic.Script
             }
             else{
                 Debug.DrawRay(transform.position,transform.position+transform.right*10f,Color.yellow);
-                Debug.Log("pas touché");
             }
 
             dir.Normalize();
-            _animator.SetBool(IsMoving, dir.magnitude > 0);
 
             GetComponent<Rigidbody2D>().velocity = speed * dir;
         }
