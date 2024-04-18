@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Inventory : MonoBehaviour
 {
@@ -11,7 +12,11 @@ public class Inventory : MonoBehaviour
     List<Item> itemList = new List<Item>();
     [SerializeField]
     private MouseFollower mouseFollower;
-    public Sprite sprite;
+
+    private int draggedItemIndex = -1;
+
+    public event Action<int> OnStartDragging;
+    public event Action<int,int> OnSwapItems;
 
     private void Awake()
     {
@@ -31,35 +36,64 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private void HandleBeginDrag(Item obj)
+    public void ResetAllItems(){
+        foreach(var item in itemList){
+            item.ResetData();
+        }
+    }
+
+    public void UpdateData(int itemIndex,Sprite sprite){
+        if(itemList.Count > itemIndex){
+            itemList[itemIndex].SetData(sprite);
+        }
+    }
+
+    private void HandleBeginDrag(Item item)
     {
+        int index = itemList.IndexOf(item);
+        if(index == -1)
+            return;
+        draggedItemIndex = index;
+        OnStartDragging?.Invoke(index);
+    }
+
+    public void CreateDraggedItem(Sprite sprite){
         mouseFollower.Toggle(true);
         mouseFollower.SetData(sprite);
     }
 
-    private void HandleSwap(Item obj)
+    private void HandleSwap(Item item)
     {
-        Debug.Log(obj.name);
+        int index = itemList.IndexOf(item);
+        if(index == -1){
+            return;
+        }
+        OnSwapItems?.Invoke(draggedItemIndex,index);
     }
 
-    private void HandleEndDrag(Item obj)
-    {
+    public void ResetDraggedItem(){
         mouseFollower.Toggle(false);
+        draggedItemIndex = -1;
     }
 
-    private void HandleShowItemActions(Item obj)
+    private void HandleEndDrag(Item item)
     {
-        item.SetData(sprite);
+        ResetDraggedItem();
+    }
+
+    private void HandleShowItemActions(Item item)
+    {
+
     }
 
 
     public void Show(){
         gameObject.SetActive(true);
-        itemList[0].SetData(sprite);
     }
 
     public void Hide(){
         gameObject.SetActive(false);
+        ResetDraggedItem();
     }
 
     public float getSizeX()
