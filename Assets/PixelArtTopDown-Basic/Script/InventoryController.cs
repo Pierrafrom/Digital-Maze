@@ -9,6 +9,12 @@ public class InventoryController : MonoBehaviour
     private Inventory inventoryUI;
     [SerializeField]
     private InventoryModel inventoryData;
+    [SerializeField]
+    private Inventory altarInventory;
+    [SerializeField]
+    private Inventory altarContent;
+    [SerializeField]
+    private Inventory altarOperation;
 
     public List<InventoryItem> initialItems = new List<InventoryItem>();
 
@@ -24,31 +30,52 @@ public class InventoryController : MonoBehaviour
 
     private void PrepareInventoryData(){
         inventoryData.Initialize();
-        inventoryData.OnInventoryUpdate += UpdateInventoryUI;
+        inventoryData.OnInventoryUpdate += UpdateInventory;
         foreach(InventoryItem item in initialItems){
             if(item.IsEmpty)continue;
             inventoryData.AddItem(item);
         }
     }
 
-    private void UpdateInventoryUI(Dictionary<int,InventoryItem> inventoryState){
-        inventoryUI.ResetAllItems();
-        foreach(var item in inventoryState){
-            inventoryUI.UpdateData(item.Key,item.Value.item.sprite);
+    private void UpdateInventory(Dictionary<int,InventoryItem> inventoryState){
+        if(inventoryUI.isActiveAndEnabled == true){
+                inventoryUI.ResetAllItems();
+            foreach(var item in inventoryState){
+                inventoryUI.UpdateData(item.Key,item.Value.item.sprite);
+            }
+        }
+        else if(altarInventory.isActiveAndEnabled == true){
+                altarContent.ResetAllItems();
+            foreach(var item in inventoryState){
+                altarContent.UpdateData(item.Key,item.Value.item.sprite);
+            }
         }
     }
 
 
     private void PrepareUI(){
         inventoryUI.InitializeInventory(inventoryData.Size);
+        altarContent.InitializeInventory(inventoryData.Size);
         this.inventoryUI.OnSwapItems += HandleSwapItems;
         this.inventoryUI.OnStartDragging += HandleDragging;
+        this.altarInventory.OnSwapItems += HandleSwapItems;
+        this.altarInventory.OnStartDragging += HandleDragging;
+        this.altarContent.OnSwapItems += HandleSwapItems;
+        this.altarContent.OnStartDragging += HandleDragging;
+        this.altarOperation.OnSwapItems += HandleSwapItems;
+        this.altarOperation.OnStartDragging += HandleDragging;
     }
 
     private void HandleDragging(int index){
         InventoryItem inventoryItem = inventoryData.GetItemAt(index);
         if(inventoryItem.IsEmpty) return;
-        inventoryUI.CreateDraggedItem(inventoryItem.item.sprite);
+        if(inventoryUI.isActiveAndEnabled == true){
+            inventoryUI.CreateDraggedItem(inventoryItem.item.sprite);
+        }
+        else if(altarInventory.isActiveAndEnabled == true){
+            altarInventory.CreateDraggedItem(inventoryItem.item.sprite);
+        }
+
     }
 
     private void HandleSwapItems(int index1, int index2){
@@ -68,6 +95,21 @@ public class InventoryController : MonoBehaviour
                 inventoryUI.Hide();
             }
         }
+        else if(Input.GetKeyDown(KeyCode.J)){
+            if(altarInventory.isActiveAndEnabled == false){
+                altarInventory.Show();
+                altarContent.Show();
+                altarOperation.Show();
+                foreach(var item in inventoryData.GetCurrentInventoryState()){
+                    altarContent.UpdateData(item.Key,item.Value.item.sprite);
+                }
+            }
+            else{
+            altarInventory.Hide();
+            }
+        }
+        
     }
 }
+
 
