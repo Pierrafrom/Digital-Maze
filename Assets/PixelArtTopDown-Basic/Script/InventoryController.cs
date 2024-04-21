@@ -14,7 +14,11 @@ public class InventoryController : MonoBehaviour
     [SerializeField]
     private Inventory altarContent;
     [SerializeField]
-    private Inventory altarOperation;
+    private Inventory operationInventory;
+    [SerializeField]
+    private AltarOperation altarOperation;
+    [SerializeField]
+    private List<OpenAltar> altars;
 
     public List<InventoryItem> initialItems = new List<InventoryItem>();
 
@@ -35,6 +39,7 @@ public class InventoryController : MonoBehaviour
             if(item.IsEmpty)continue;
             inventoryData.AddItem(item);
         }
+        altarOperation.getOperationItem().SetData(altarOperation.getOperationSprite());
     }
 
     private void UpdateInventory(Dictionary<int,InventoryItem> inventoryState){
@@ -46,10 +51,13 @@ public class InventoryController : MonoBehaviour
         }
         else if(altarInventory.isActiveAndEnabled == true){
                 altarContent.ResetAllItems();
+                operationInventory.ResetAllItems();
             foreach(var item in inventoryState){
                 altarContent.UpdateData(item.Key,item.Value.item.sprite);
             }
+            altarOperation.getOperationItem().SetData(altarOperation.getOperationSprite());
         }
+        
     }
 
 
@@ -62,8 +70,9 @@ public class InventoryController : MonoBehaviour
         this.altarInventory.OnStartDragging += HandleDragging;
         this.altarContent.OnSwapItems += HandleSwapItems;
         this.altarContent.OnStartDragging += HandleDragging;
-        this.altarOperation.OnSwapItems += HandleSwapItems;
-        this.altarOperation.OnStartDragging += HandleDragging;
+        this.altarContent.OnLeftClick += LeftClick;
+        this.operationInventory.OnSwapItems += HandleSwapItems;
+        this.operationInventory.OnStartDragging += HandleDragging;
     }
 
     private void HandleDragging(int index){
@@ -76,6 +85,14 @@ public class InventoryController : MonoBehaviour
             altarInventory.CreateDraggedItem(inventoryItem.item.sprite);
         }
 
+    }
+
+    private void LeftClick(int index){
+        if(altarInventory.isActiveAndEnabled == true){
+            Item item = altarContent.getItemList()[index];
+            if(item.IsEmpty()) altarOperation.getBack(item,index);
+            else altarOperation.Fill(item);
+        }
     }
 
     private void HandleSwapItems(int index1, int index2){
@@ -95,11 +112,18 @@ public class InventoryController : MonoBehaviour
                 inventoryUI.Hide();
             }
         }
-        else if(Input.GetKeyDown(KeyCode.J)){
-            if(altarInventory.isActiveAndEnabled == false){
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision){
+        foreach(OpenAltar altar in altars){
+            Debug.Log(collision.name);
+            Debug.Log(altar.name);
+            if(collision.name == altar.name){
+                altarOperation.SetOperationSprite(altar.getSprite());
+                if(altarInventory.isActiveAndEnabled == false){
                 altarInventory.Show();
                 altarContent.Show();
-                altarOperation.Show();
+                operationInventory.Show();
                 foreach(var item in inventoryData.GetCurrentInventoryState()){
                     altarContent.UpdateData(item.Key,item.Value.item.sprite);
                 }
@@ -107,8 +131,19 @@ public class InventoryController : MonoBehaviour
             else{
             altarInventory.Hide();
             }
+            }
         }
-        
+
+    }
+
+    private void OnTriggerExit2D(Collider2D collision){
+         foreach(OpenAltar altar in altars){
+            Debug.Log(collision.name);
+            Debug.Log(altar.name);
+            if(collision.name == altar.name){
+                altarInventory.Hide();
+            }
+         }
     }
 }
 

@@ -15,7 +15,7 @@ public class Inventory : MonoBehaviour
 
     private int draggedItemIndex = -1;
 
-    public event Action<int> OnStartDragging;
+    public event Action<int> OnStartDragging,OnLeftClick;
     public event Action<int,int> OnSwapItems;
 
     private void Awake()
@@ -32,7 +32,7 @@ public class Inventory : MonoBehaviour
             uiItem.OnItemBeginDrag += HandleBeginDrag;
             uiItem.OnItemDroppedOn += HandleSwap;
             uiItem.OnItemEndDrag += HandleEndDrag;
-            uiItem.OnRightMouseBtnClick += HandleShowItemActions;
+            uiItem.OnPointerLeftClick += HandleLeftClick;
         }
     }
 
@@ -81,9 +81,17 @@ public class Inventory : MonoBehaviour
         ResetDraggedItem();
     }
 
-    private void HandleShowItemActions(Item item)
-    {
+    private void HandleLeftClick(Item item){
+        int index = itemList.IndexOf(item);
+        if(index == -1)
+            return;
+        draggedItemIndex = index;
+        OnLeftClick?.Invoke(index);
+    }
 
+
+    public List<Item> getItemList(){
+        return this.itemList;
     }
 
 

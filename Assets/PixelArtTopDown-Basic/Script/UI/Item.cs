@@ -10,7 +10,7 @@ public class Item : MonoBehaviour,IPointerClickHandler,IBeginDragHandler,IEndDra
     [SerializeField]
     private Image itemImage;
 
-    public event Action<Item> OnItemDroppedOn, OnItemBeginDrag, OnItemEndDrag, OnRightMouseBtnClick;
+    public event Action<Item> OnItemDroppedOn, OnItemBeginDrag, OnItemEndDrag, OnPointerLeftClick;
     private bool empty = true;
 
     public void Awake()
@@ -21,14 +21,17 @@ public class Item : MonoBehaviour,IPointerClickHandler,IBeginDragHandler,IEndDra
     public void ResetData()
     {
         this.itemImage.gameObject.SetActive(false);
-        empty = true;
+        this.empty = true;
     }
 
+    public Sprite GetSprite(){
+        return this.itemImage.sprite;
+    }
     public void SetData(Sprite sprite)
     {
         this.itemImage.gameObject.SetActive(true);
         this.itemImage.sprite = sprite;
-        empty = false;
+        this.empty = false;
     }
 
     public void OnDrag(PointerEventData eventData){
@@ -50,9 +53,13 @@ public class Item : MonoBehaviour,IPointerClickHandler,IBeginDragHandler,IEndDra
 
     public void OnPointerClick(PointerEventData eventData){
         PointerEventData pointerData = (PointerEventData)eventData;
-        if(pointerData.button == PointerEventData.InputButton.Right)
+        if(pointerData.button == PointerEventData.InputButton.Left)
         {
-            OnRightMouseBtnClick?.Invoke(this);
+            OnPointerLeftClick?.Invoke(this);
         }
+    }
+
+    public bool IsEmpty(){
+        return this.empty;
     }
 }
