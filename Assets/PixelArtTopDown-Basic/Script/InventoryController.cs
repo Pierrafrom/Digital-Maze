@@ -19,6 +19,8 @@ public class InventoryController : MonoBehaviour
     private AltarOperation altarOperation;
     [SerializeField]
     private List<OpenAltar> altars;
+    [SerializeField]
+    private DoorCode door;
 
     public List<InventoryItem> initialItems = new List<InventoryItem>();
 
@@ -116,8 +118,6 @@ public class InventoryController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision){
         foreach(OpenAltar altar in altars){
-            Debug.Log(collision.name);
-            Debug.Log(altar.name);
             if(collision.name == altar.name){
                 altarOperation.SetOperationSprite(altar.getSprite());
                 if(altarInventory.isActiveAndEnabled == false){
@@ -133,13 +133,18 @@ public class InventoryController : MonoBehaviour
             }
             }
         }
+        if(collision.name == "PF Props Wooden Gate"){
+            foreach(Item item in inventoryUI.getItemList()){
+                if(item.GetSprite()==door.getNumberSprite()){
+                    door.Open();
+                }
+            }
+        }
 
     }
 
     private void OnTriggerExit2D(Collider2D collision){
          foreach(OpenAltar altar in altars){
-            Debug.Log(collision.name);
-            Debug.Log(altar.name);
             if(collision.name == altar.name){
                 altarInventory.Hide();
             }

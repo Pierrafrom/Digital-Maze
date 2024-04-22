@@ -71,8 +71,7 @@ namespace PixelArtTopDown_Basic.Script
             hit = Physics2D.Raycast(transform.position,transform.right,10f);
             if(hit.collider.name == "PF Player"){
                 Debug.DrawRay(transform.position,hit.point,Color.red);
-                Debug.Log(hit.collider.name);
-                i = 0;
+                i = 1;
                 //problème à résoudre
             }
             else{
