@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2055102311959635375}
   - component: {fileID: 2055102311959635368}
   - component: {fileID: 2055102311959635374}
-  - component: {fileID: 3850847036156907660}
   m_Layer: 20
   m_Name: PF Props Wooden Gate
   m_TagString: Untagged
@@ -133,22 +132,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &3850847036156907660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2055102311959635369}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c68d66bd34e7066459f53c8a44e2c7d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  square: {fileID: 9088226032145085174}
-  doorSprites:
-  - {fileID: 21300158, guid: 29c9cded5e558164aaf8c9bf08aa1510, type: 3}
-  - {fileID: 21300160, guid: 29c9cded5e558164aaf8c9bf08aa1510, type: 3}
 --- !u!1 &2055102312182832482
 GameObject:
   m_ObjectHideFlags: 0
