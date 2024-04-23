@@ -1,88 +1,122 @@
 using UnityEngine;
-using System.Collections;
 
 namespace PixelArtTopDown_Basic.Script
 {
     public class MonsterMovements : MonoBehaviour
     {
-        public float speed;
+        public GameObject exclamationMark;
+        public CalculationPopUp calculationPopUp;
+
+        public float speed = 5f;
+        public float detectionDistance = 0.5f;
+        public float changeDirectionTime = 5f;
+        public float PlayerDetectionRadius = 2f;
+        public float PlayerCalcDistance = 1f;
 
         private Animator _animator;
+        private Rigidbody2D _rigidbody;
         private static readonly int Direction = Animator.StringToHash("Direction");
         private static readonly int IsMoving = Animator.StringToHash("IsMoving");
-        private static readonly int Death = Animator.StringToHash("Death");
-        private static readonly int Attack = Animator.StringToHash("Attack");
-        private int i = 1;
+        private Vector2[] directions = new Vector2[] { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
+        private int currentDirectionIndex = 0;
+        private bool PlayerDetected = false;
+        
+        
+        private float timer;
 
         private void Start()
         {
             _animator = GetComponent<Animator>();
+            _rigidbody = GetComponent<Rigidbody2D>();
+            timer = changeDirectionTime;
+            exclamationMark.SetActive(false);
         }
-
 
         private void Update()
         {
+            timer -= Time.deltaTime;
+            PlayerDetected = false;
 
-            if(i!=0){
-                i++;
-            }
-            int temps = i%20000;
-            Vector2 dir = Vector2.zero;
-            RaycastHit2D hit;
-
-            if(temps <= 5000 && temps >0){
-                dir.x = 1;
-            }
-            else if (5000 <temps && temps <=10000){
-                dir.x = -1;
-            }
-            else if(10000 < temps && temps <=15000){
-                dir.y = 1;
-            }
-            else if(15000< temps && temps <=20000){
-                dir.y = -1;
-            }
-            else{
-                dir.x = 0;
-                dir.y = 0;
-            }
-            if (dir.x == -1)
+            if (timer <= 0)
             {
-                _animator.SetInteger(Direction, 3);
+                currentDirectionIndex = (currentDirectionIndex + 1) % directions.Length;
+                timer = changeDirectionTime;
             }
-            else if (dir.x == 1)
+
+            if (IsObstacleInFront())
+                ChooseRandNewDirection();
+
+            Vector2 moveDirection = directions[currentDirectionIndex];
+
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, PlayerDetectionRadius);
+            foreach (Collider2D hit in hits)
             {
-                _animator.SetInteger(Direction, 2);
-            }
+                if (hit.name == "PF Player")
+                {
+                    exclamationMark.SetActive(true);
 
-            else if (dir.y == 1)
-            {
-                
-                _animator.SetInteger(Direction, 1);
-            }
-            else if (dir.y == -1)
-            {
-                _animator.SetInteger(Direction, 0);
-            }
-            else{
-                _animator.SetInteger(Direction,4);
-            }
+                    float distance = Vector2.Distance(transform.position, hit.transform.position);
 
-            hit = Physics2D.Raycast(transform.position,transform.right,10f);
-            if(hit.collider.name == "PF Player"){
-                Debug.DrawRay(transform.position,hit.point,Color.red);
-                i = 1;
-                //problème à résoudre
-            }
-            else{
-                Debug.DrawRay(transform.position,transform.position+transform.right*10f,Color.yellow);
-            }
+                    if(!calculationPopUp.IsPopUpActive && distance <= PlayerCalcDistance)
+                    {
+                        calculationPopUp.GenerateCalculation();
+                        moveDirection = Vector2.zero;
+                    }
+                    
+                    PlayerDetected = true;
 
-            dir.Normalize();
+                    break;
+                }
+            }
+            if (PlayerDetected == false)
+                exclamationMark.SetActive(false);
 
-            GetComponent<Rigidbody2D>().velocity = speed * dir;
+            MoveMonster(moveDirection);
+            AnimateMonster(moveDirection);
         }
 
-        
+        private bool IsObstacleInFront()
+        {
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, directions[currentDirectionIndex], detectionDistance);
+            return hit.collider != null;
+        }
+
+        private void ChooseRandNewDirection()
+        {
+            int newDirectionIndex;
+            do
+            {
+                newDirectionIndex = Random.Range(0, directions.Length);
+            }
+            while (newDirectionIndex == currentDirectionIndex);
+
+            currentDirectionIndex = newDirectionIndex;
+        }
+
+        private void MoveMonster(Vector2 dir)
+        {
+            _rigidbody.velocity = speed * dir.normalized;
+        }
+
+        private void AnimateMonster(Vector2 dir)
+        {
+            if (dir.magnitude > 0)
+            {
+                _animator.SetBool(IsMoving, true);
+                if (dir.x > 0)
+                    _animator.SetInteger(Direction, 2);//R
+                else if (dir.x < 0)
+                    _animator.SetInteger(Direction, 3);//L
+                else if (dir.y > 0)
+                    _animator.SetInteger(Direction, 1);//Up
+                else if (dir.y < 0)
+                    _animator.SetInteger(Direction, 0);//Down
+            }
+            else
+            {
+                _animator.SetBool(IsMoving, false);
+                _animator.SetInteger(Direction, 4);//Idle
+            }
+        }
     }
 }
