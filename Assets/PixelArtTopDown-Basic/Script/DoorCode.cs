@@ -8,11 +8,16 @@ public class DoorCode : MonoBehaviour
     private GameObject square;
 
     private Animator _animator;
+    private BoxCollider2D _collider;
     private static readonly int open = Animator.StringToHash("open");
 
     private void Start()
     {
         _animator = GetComponent<Animator>();
+        _animator.SetBool(open,false);
+
+        _collider = gameObject.AddComponent<BoxCollider2D>();
+
     }
 
     public Sprite getNumberSprite(){
@@ -22,5 +27,7 @@ public class DoorCode : MonoBehaviour
 
     public void Open(){
         _animator.SetBool(open,true);
+        
+        _collider.enabled = false;
     }
 }

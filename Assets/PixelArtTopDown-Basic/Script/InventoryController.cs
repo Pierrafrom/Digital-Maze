@@ -150,6 +150,23 @@ public class InventoryController : MonoBehaviour
             }
          }
     }
+    public void ClearInventory()
+    {
+        // Clear the inventory data
+        inventoryData.Clear();
+
+        // Update the UI
+        if(inventoryUI.isActiveAndEnabled == true)
+        {
+            inventoryUI.ResetAllItems();
+        }
+        else if(altarInventory.isActiveAndEnabled == true)
+        {
+            altarContent.ResetAllItems();
+            operationInventory.ResetAllItems();
+        }
+    }
+    
 }
 
 

@@ -50,5 +50,43 @@ namespace PixelArtTopDown_Basic.Script
 
             GetComponent<Rigidbody2D>().velocity = speed * dir;
         }
+        
+        public void freezeMovement(){
+            speed = 0;
+        }
+        
+        public void unfreezeMovement(){
+            Vector2 dir = Vector2.zero;
+            if (Input.GetKey(KeyCode.A))
+            {
+                dir.x = -1;
+                _animator.SetInteger(Direction, 3);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                dir.x = 1;
+                _animator.SetInteger(Direction, 2);
+            }
+
+            else if (Input.GetKey(KeyCode.W))
+            {
+                dir.y = 1;
+                _animator.SetInteger(Direction, 1);
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                dir.y = -1;
+                _animator.SetInteger(Direction, 0);
+            }
+            else{
+                dir.x = 0;
+                dir.y = 0;
+                _animator.SetInteger(Direction,4);
+            }
+
+            dir.Normalize();
+
+            GetComponent<Rigidbody2D>().velocity = speed * dir;
+        }
     }
 }

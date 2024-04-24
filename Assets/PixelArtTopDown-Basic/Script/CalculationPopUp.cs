@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using PixelArtTopDown_Basic.Script;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CalculationPopUp : MonoBehaviour
 {
+    
+    public InventoryController InventoryController;
+    public TopDownCharacterController TopDownCharacterController;
     public bool IsPopUpActive { get; private set; }
 
     public TMP_Text questionText;
@@ -37,13 +41,13 @@ public class CalculationPopUp : MonoBehaviour
                 break;
             case 2: //Multiplication
                 correctAnswer = a * b;
-                questionText.text = $"Solve: {a} × {b} = ?";
+                questionText.text = $"Solve: {a} * {b} = ?";
                 break;
             case 3: //Division
                 b = b == 0 ? 1 : b;
                 a = a * b;
                 correctAnswer = a / b;
-                questionText.text = $"Solve: {a} ÷ {b} = ?";
+                questionText.text = $"Solve: {a} / {b} = ?";
                 break;
         }
 
@@ -60,12 +64,14 @@ public class CalculationPopUp : MonoBehaviour
         {
             IsPopUpActive = false;
             gameObject.SetActive(false);
-
             //correct answer
         }
         else
         {
             //wrong answer
+            InventoryController.ClearInventory();
+            IsPopUpActive = false;
+            gameObject.SetActive(false);
         }
     }
 }

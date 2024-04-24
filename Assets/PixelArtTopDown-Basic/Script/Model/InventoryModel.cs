@@ -61,6 +61,13 @@ public class InventoryModel : ScriptableObject
     public void InformAboutChange(){
         OnInventoryUpdate?.Invoke(GetCurrentInventoryState());
     }
+    
+    public void Clear(){
+        for(int i = 0; i<inventoryItems.Count;i++){
+            inventoryItems[i] = InventoryItem.GetEmptyItem();
+        }
+        InformAboutChange();
+    }
 }
 
 [Serializable]

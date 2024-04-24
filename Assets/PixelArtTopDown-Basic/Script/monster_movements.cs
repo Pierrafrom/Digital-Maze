@@ -9,8 +9,8 @@ namespace PixelArtTopDown_Basic.Script
 
         public float speed = 5f;
         public float detectionDistance = 0.5f;
-        public float changeDirectionTime = 5f;
-        public float PlayerDetectionRadius = 2f;
+        public float changeDirectionTime = 2f;
+        public float PlayerDetectionRadius = 4f;
         public float PlayerCalcDistance = 1f;
 
         private Animator _animator;
@@ -28,25 +28,23 @@ namespace PixelArtTopDown_Basic.Script
         {
             _animator = GetComponent<Animator>();
             _rigidbody = GetComponent<Rigidbody2D>();
+            if (_animator == null || _rigidbody == null)
+            {
+                Debug.LogError("Animator or Rigidbody2D component is missing!");
+                return;
+            }
+            if (exclamationMark == null || calculationPopUp == null)
+            {
+                Debug.LogError("exclamationMark or calculationPopUp is not set!");
+                return;
+            }
             timer = changeDirectionTime;
             exclamationMark.SetActive(false);
         }
 
         private void Update()
         {
-            timer -= Time.deltaTime;
-            PlayerDetected = false;
-
-            if (timer <= 0)
-            {
-                currentDirectionIndex = (currentDirectionIndex + 1) % directions.Length;
-                timer = changeDirectionTime;
-            }
-
-            if (IsObstacleInFront())
-                ChooseRandNewDirection();
-
-            Vector2 moveDirection = directions[currentDirectionIndex];
+            Vector2 moveDirection = directions[currentDirectionIndex]; ;
 
             Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, PlayerDetectionRadius);
             foreach (Collider2D hit in hits)
@@ -61,15 +59,25 @@ namespace PixelArtTopDown_Basic.Script
                     {
                         calculationPopUp.GenerateCalculation();
                         moveDirection = Vector2.zero;
+                        this.gameObject.SetActive(false);
                     }
-                    
+                    else
+                    {
+                        // Calculate the direction to the player
+                        moveDirection = (hit.transform.position - transform.position).normalized;
+                    }
+
                     PlayerDetected = true;
 
                     break;
                 }
             }
-            if (PlayerDetected == false)
+
+            if (!PlayerDetected)
+            {
                 exclamationMark.SetActive(false);
+                moveDirection = directions[currentDirectionIndex];
+            }
 
             MoveMonster(moveDirection);
             AnimateMonster(moveDirection);
@@ -78,19 +86,12 @@ namespace PixelArtTopDown_Basic.Script
         private bool IsObstacleInFront()
         {
             RaycastHit2D hit = Physics2D.Raycast(transform.position, directions[currentDirectionIndex], detectionDistance);
-            return hit.collider != null;
+            return hit.collider != null && hit.collider.gameObject != gameObject;
         }
 
         private void ChooseRandNewDirection()
         {
-            int newDirectionIndex;
-            do
-            {
-                newDirectionIndex = Random.Range(0, directions.Length);
-            }
-            while (newDirectionIndex == currentDirectionIndex);
-
-            currentDirectionIndex = newDirectionIndex;
+            currentDirectionIndex = (currentDirectionIndex + 2) % directions.Length;
         }
 
         private void MoveMonster(Vector2 dir)
