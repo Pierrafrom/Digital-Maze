@@ -1,4 +1,8 @@
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using static Unity.Mathematics.math;
+
 
 namespace PixelArtTopDown_Basic.Script
 {
@@ -6,6 +10,8 @@ namespace PixelArtTopDown_Basic.Script
     {
         public GameObject exclamationMark;
         public CalculationPopUp calculationPopUp;
+
+        public GameObject menuTuto;
 
         public float speed = 5f;
         public float detectionDistance = 0.5f;
@@ -20,6 +26,7 @@ namespace PixelArtTopDown_Basic.Script
         private Vector2[] directions = new Vector2[] { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
         private int currentDirectionIndex = 0;
         private bool PlayerDetected = false;
+        private bool isMonsterDead = true;
         
         
         private float timer;
@@ -52,6 +59,14 @@ namespace PixelArtTopDown_Basic.Script
                 if (hit.name == "PF Player")
                 {
                     exclamationMark.SetActive(true);
+                    
+                    if(SceneManager.GetActiveScene().name == "tuto" && isMonsterDead)
+                    {
+                        menuTuto.SetActive(true);
+                        isMonsterDead = false;
+                        Time.timeScale = 0;
+                    }
+   
 
                     float distance = Vector2.Distance(transform.position, hit.transform.position);
 
@@ -119,5 +134,12 @@ namespace PixelArtTopDown_Basic.Script
                 _animator.SetInteger(Direction, 4);//Idle
             }
         }
+
+        public void Resume()
+        {
+            menuTuto.SetActive(false);
+            Time.timeScale = 1;
+        }
+        
     }
 }

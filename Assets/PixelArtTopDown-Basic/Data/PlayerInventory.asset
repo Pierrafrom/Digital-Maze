@@ -13,10 +13,22 @@ MonoBehaviour:
   m_Name: PlayerInventory
   m_EditorClassIdentifier: 
   inventoryItems:
+  - item: {fileID: 11400000, guid: 06f5bd8ae2eded54ebf59b1c0743efa9, type: 2}
+  - item: {fileID: 11400000, guid: c1a39dd31c6b09443b02245c1b058cb2, type: 2}
   - item: {fileID: 0}
+  - item: {fileID: 11400000, guid: e175e86586eaa4d429f1d278dbd39e28, type: 2}
+  - item: {fileID: 11400000, guid: c1a39dd31c6b09443b02245c1b058cb2, type: 2}
   - item: {fileID: 0}
-  - item: {fileID: 0}
-  - item: {fileID: 0}
-  - item: {fileID: 0}
-  - item: {fileID: 0}
+  Altar: {fileID: 0}
+  sprites:
+  - {fileID: 21300000, guid: 87726f26b1327f94485ef769a6ce3aad, type: 3}
+  - {fileID: 21300000, guid: 9ed042f458446ee4c8c40bac2655d388, type: 3}
+  - {fileID: 21300000, guid: ebf6871e4e8c5c04a9132ad2359c9629, type: 3}
+  - {fileID: 21300000, guid: 41c1255291973ec4393813b76622a7ae, type: 3}
+  - {fileID: 21300000, guid: 0f9d1fe1f1ceba643a89bffae553bf7b, type: 3}
+  - {fileID: 21300000, guid: 56bfd7e43fc5c7d4cb1190aaaa5e8350, type: 3}
+  - {fileID: 21300000, guid: 61b1d267280fab14d8be55a5d557ce1e, type: 3}
+  - {fileID: 21300000, guid: d4c4b3d677fb330448ea5142b61bfe63, type: 3}
+  - {fileID: 21300000, guid: be2a7c560aa69b440bb1284b00d570df, type: 3}
+  - {fileID: 21300000, guid: efc67a699e269be4d9898ae8972d02c8, type: 3}
   <Size>k__BackingField: 6

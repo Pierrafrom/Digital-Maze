@@ -26,9 +26,6 @@ public class InventoryController : MonoBehaviour
 
 
     private void Start() {
-        /*inventorySize[0] = (int)trunc(inventoryUI.getSizeX() / 180);
-        inventorySize[1] = (int)trunc(inventoryUI.getSizeY() / 180);
-        inventoryUI.InitializeInventory(inventorySize[0]* inventorySize[1]);*/
         PrepareUI();
         PrepareInventoryData();
         
@@ -37,6 +34,7 @@ public class InventoryController : MonoBehaviour
     private void PrepareInventoryData(){
         inventoryData.Initialize();
         inventoryData.OnInventoryUpdate += UpdateInventory;
+        inventoryData.OnPointerLeftClick += LeftClick;
         foreach(InventoryItem item in initialItems){
             if(item.IsEmpty)continue;
             inventoryData.AddItem(item);
@@ -44,7 +42,7 @@ public class InventoryController : MonoBehaviour
         altarOperation.getOperationItem().SetData(altarOperation.getOperationSprite());
     }
 
-    private void UpdateInventory(Dictionary<int,InventoryItem> inventoryState){
+    private void UpdateInventory(Dictionary<int,InventoryItem> inventoryState, List<InventoryItem> operationitems){
         if(inventoryUI.isActiveAndEnabled == true){
                 inventoryUI.ResetAllItems();
             foreach(var item in inventoryState){
@@ -52,12 +50,14 @@ public class InventoryController : MonoBehaviour
             }
         }
         else if(altarInventory.isActiveAndEnabled == true){
-                altarContent.ResetAllItems();
-                operationInventory.ResetAllItems();
+            altarOperation.getOperationItem().SetData(altarOperation.getOperationSprite());
+            if(!operationitems[0].IsEmpty) altarOperation.setUpItem1(operationitems[0].item.sprite);
+            else if(!operationitems[1].IsEmpty) altarOperation.setUpItem2(operationitems[1].item.sprite);
+            altarContent.ResetAllItems();
+            operationInventory.ResetAllItems();
             foreach(var item in inventoryState){
                 altarContent.UpdateData(item.Key,item.Value.item.sprite);
             }
-            altarOperation.getOperationItem().SetData(altarOperation.getOperationSprite());
         }
         
     }
@@ -90,11 +90,7 @@ public class InventoryController : MonoBehaviour
     }
 
     private void LeftClick(int index){
-        if(altarInventory.isActiveAndEnabled == true){
-            Item item = altarContent.getItemList()[index];
-            if(item.IsEmpty()) altarOperation.getBack(item,index);
-            else altarOperation.Fill(item);
-        }
+        inventoryData.LeftClick(index);
     }
 
     private void HandleSwapItems(int index1, int index2){
