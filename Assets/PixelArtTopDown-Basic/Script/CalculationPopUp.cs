@@ -69,9 +69,10 @@ public class CalculationPopUp : MonoBehaviour
         else
         {
             //wrong answer
-            InventoryController.ClearInventory();
-            IsPopUpActive = false;
             gameObject.SetActive(false);
+            IsPopUpActive = false;
+            InventoryController.ClearInventory();
+            
         }
     }
 }

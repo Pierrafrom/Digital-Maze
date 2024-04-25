@@ -20,8 +20,11 @@ public class Item : MonoBehaviour,IPointerClickHandler,IBeginDragHandler,IEndDra
 
     public void ResetData()
     {
-        this.itemImage.gameObject.SetActive(false);
-        this.itemImage.sprite = null;
+        if (this.itemImage != null)
+        {
+            this.itemImage.gameObject.SetActive(false);
+        }
+        //this.itemImage.sprite = null;
         this.empty = true;
     }
 

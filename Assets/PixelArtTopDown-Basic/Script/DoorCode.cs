@@ -40,8 +40,9 @@ public class DoorCode : MonoBehaviour
             StartCoroutine(LoadLevel1AfterDelay(0.2f));
         }
 
-        if (other.name == "PF Player" && _animator.GetBool(open) && SceneManager.GetActiveScene().name == "Lv1")
+        if ( _animator.GetBool(open) && SceneManager.GetActiveScene().name == "Lvl1")
         {
+            Debug.Log("test fini");
             StartCoroutine(LoadLevelMenuAfterDelay(0.2f));
         }
     }
@@ -49,7 +50,7 @@ public class DoorCode : MonoBehaviour
     IEnumerator LoadLevel1AfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        SceneManager.LoadScene("Lvl1");
+        SceneManager.LoadScene("MainMenu");
     }
     
     IEnumerator LoadLevelMenuAfterDelay(float delay)
