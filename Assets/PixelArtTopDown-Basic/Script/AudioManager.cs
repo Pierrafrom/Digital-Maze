@@ -1,31 +1,42 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class AudioManager : MonoBehaviour
+namespace Audio 
 {
-    public AudioClip[] audioClips;
-    public AudioSource audioSource;
-    
-    void Start()
+    public class AudioManager : MonoBehaviour
     {
-        audioSource.clip = audioClips[0];
-        audioSource.Play();
-        
-    }
-
+        public AudioClip[] audioClips;
+        public AudioSource audioSource;
     
-    void Update()
-    {
-        if (SceneManager.GetActiveScene().name == "MainMenu")
+        void Start()
         {
             audioSource.clip = audioClips[0];
-        }
-        else
-        {
-            audioSource.clip = audioClips[1];
-        }
-        if(!audioSource.isPlaying)
             audioSource.Play();
         
+        }
+
+    
+        void Update()
+        {
+            if (SceneManager.GetActiveScene().name == "MainMenu")
+            {
+                audioSource.clip = audioClips[0];
+            }
+            else
+            {
+                audioSource.clip = audioClips[1];
+            }
+            if(!audioSource.isPlaying)
+                audioSource.Play();
+        
+        }
+    
+        public void PlaySound(int index)
+        {
+            audioSource.clip = audioClips[index];
+            audioSource.Play();
+        }
     }
+    
 }
+

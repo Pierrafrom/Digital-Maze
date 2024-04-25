@@ -1,10 +1,15 @@
-﻿using UnityEngine;
+﻿using Audio;
+using UnityEngine;
+using Tuto;
+
 
 namespace PixelArtTopDown_Basic.Script
 {
     public class TopDownCharacterController : MonoBehaviour
     {
         public float speed;
+        public MenuTuto menuTuto;
+     
 
         private Animator _animator;
         private static readonly int Direction = Animator.StringToHash("Direction");
@@ -23,22 +28,27 @@ namespace PixelArtTopDown_Basic.Script
             {
                 dir.x = -1;
                 _animator.SetInteger(Direction, 3);
+                menuTuto.OnCharacterMove();
+             
             }
             else if (Input.GetKey(KeyCode.D))
             {
                 dir.x = 1;
                 _animator.SetInteger(Direction, 2);
+                menuTuto.OnCharacterMove();
             }
 
             else if (Input.GetKey(KeyCode.W))
             {
                 dir.y = 1;
                 _animator.SetInteger(Direction, 1);
+                menuTuto.OnCharacterMove();
             }
             else if (Input.GetKey(KeyCode.S))
             {
                 dir.y = -1;
                 _animator.SetInteger(Direction, 0);
+                menuTuto.OnCharacterMove();
             }
             else{
                 dir.x = 0;
@@ -49,6 +59,7 @@ namespace PixelArtTopDown_Basic.Script
             dir.Normalize();
 
             GetComponent<Rigidbody2D>().velocity = speed * dir;
+            
         }
         
         public void freezeMovement(){

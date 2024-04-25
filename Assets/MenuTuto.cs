@@ -1,23 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class MenuTuto : MonoBehaviour
+namespace Tuto
 {
-
-public GameObject menuTuto;
-public GameObject monster;
-
-   private bool isMonsterDead = true;
-    void Update()
+    public class MenuTuto : MonoBehaviour
     {
-        
-    }
 
-    public void Resume()
-    {
-        menuTuto.SetActive(false);
-        Time.timeScale = 1;
-        Debug.Log("test");
+        public GameObject menuTuto;
+        public GameObject monster;
+        public GameObject infosTuto;
+
+
+        private bool isMonsterDead = true;
+        private bool isFirstMove = true;
+
+        public void Resume()
+        {
+            menuTuto.SetActive(false);
+            infosTuto.SetActive(false);
+            Time.timeScale = 1;
+        }
+    
+        public void OnCharacterMove()
+        {
+            if (isFirstMove && SceneManager.GetActiveScene().name == "tuto")
+            {
+                infosTuto.SetActive(true);
+                Time.timeScale = 0;
+                isFirstMove = false;
+            }
+        }
     }
 }
+
