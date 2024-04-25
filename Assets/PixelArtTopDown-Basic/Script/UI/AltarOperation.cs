@@ -23,12 +23,12 @@ public class AltarOperation : MonoBehaviour
 
     public void setUpItem1(Sprite item)
     {
-        this.item1.SetData(item);
+        item1.SetData(item);
     }
     
     public void setUpItem2(Sprite item)
     {
-        this.item2.SetData(item);
+        item2.SetData(item);
     }
     
     public Sprite getOperationSprite()
@@ -44,16 +44,6 @@ public class AltarOperation : MonoBehaviour
     public Sprite getItem1Sprite()
     {
         return this.item1.GetSprite();
-    }
-    
-    public void setItem1Sprite(Sprite sprite)
-    {
-        item1.SetData(sprite);
-    }
-    
-    public void setItem2Sprite(Sprite sprite)
-    {
-        item2.SetData(sprite);
     }
 
     public Item getItem2()

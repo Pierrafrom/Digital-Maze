@@ -21,6 +21,7 @@ public class Item : MonoBehaviour,IPointerClickHandler,IBeginDragHandler,IEndDra
     public void ResetData()
     {
         this.itemImage.gameObject.SetActive(false);
+        this.itemImage.sprite = null;
         this.empty = true;
     }
 
@@ -29,8 +30,8 @@ public class Item : MonoBehaviour,IPointerClickHandler,IBeginDragHandler,IEndDra
     }
     public void SetData(Sprite sprite)
     {
-        this.itemImage.gameObject.SetActive(true);
         this.itemImage.sprite = sprite;
+        this.itemImage.gameObject.SetActive(true);
         this.empty = false;
     }
 

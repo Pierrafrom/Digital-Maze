@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1869315837
   m_SortingLayer: 1
-  m_SortingOrder: 2
+  m_SortingOrder: 4
   m_Sprite: {fileID: -1082204099, guid: 8f2d890f4c62c4446a5b2e57d25e2347, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -172,7 +172,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f35bad5efafc04c4cbebfe61a643aaae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  exclamationMark: {fileID: 0}
+  calculationPopUp: {fileID: 0}
+  menuTuto: {fileID: 0}
   speed: 1
+  detectionDistance: 0.5
+  changeDirectionTime: 2
+  PlayerDetectionRadius: 4
+  PlayerCalcDistance: 1
 --- !u!95 &8361404167211814555
 Animator:
   serializedVersion: 5

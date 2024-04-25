@@ -21,6 +21,7 @@ public class InventoryController : MonoBehaviour
     private List<OpenAltar> altars;
     [SerializeField]
     private DoorCode door;
+    private OpenAltar currentAltar;
 
     public List<InventoryItem> initialItems = new List<InventoryItem>();
 
@@ -43,18 +44,24 @@ public class InventoryController : MonoBehaviour
     }
 
     private void UpdateInventory(Dictionary<int,InventoryItem> inventoryState, List<InventoryItem> operationitems){
-        if(inventoryUI.isActiveAndEnabled == true){
-                inventoryUI.ResetAllItems();
-            foreach(var item in inventoryState){
-                inventoryUI.UpdateData(item.Key,item.Value.item.sprite);
-            }
-        }
-        else if(altarInventory.isActiveAndEnabled == true){
+        inventoryUI.ResetAllItems();
+        inventoryUI.updateItemList(inventoryState);
+        if(altarInventory.isActiveAndEnabled == true){
             altarOperation.getOperationItem().SetData(altarOperation.getOperationSprite());
-            if(!operationitems[0].IsEmpty) altarOperation.setUpItem1(operationitems[0].item.sprite);
-            else if(!operationitems[1].IsEmpty) altarOperation.setUpItem2(operationitems[1].item.sprite);
+            if(!operationitems[0].IsEmpty){
+                altarOperation.setUpItem1(operationitems[0].item.sprite);
+            } 
+            else {
+                altarOperation.setUpItem1(null);
+            }
+            if(!operationitems[1].IsEmpty) {
+                altarOperation.setUpItem2(operationitems[1].item.sprite);
+            }
+            else {
+                altarOperation.setUpItem2(null);
+            }
             altarContent.ResetAllItems();
-            operationInventory.ResetAllItems();
+            
             foreach(var item in inventoryState){
                 altarContent.UpdateData(item.Key,item.Value.item.sprite);
             }
@@ -90,7 +97,7 @@ public class InventoryController : MonoBehaviour
     }
 
     private void LeftClick(int index){
-        inventoryData.LeftClick(index);
+        inventoryData.LeftClick(index,currentAltar);
     }
 
     private void HandleSwapItems(int index1, int index2){
@@ -115,6 +122,7 @@ public class InventoryController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision){
         foreach(OpenAltar altar in altars){
             if(collision.name == altar.name){
+                currentAltar = altar;
                 altarOperation.SetOperationSprite(altar.getSprite());
                 if(altarInventory.isActiveAndEnabled == false){
                 altarInventory.Show();

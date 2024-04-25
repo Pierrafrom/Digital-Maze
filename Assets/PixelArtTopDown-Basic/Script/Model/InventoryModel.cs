@@ -10,9 +10,7 @@ public class InventoryModel : ScriptableObject
     [SerializeField]
     private List<InventoryItem> inventoryItems;
     private List<InventoryItem> operationItems;
-    
-    [SerializeField]
-    private OpenAltar altar;
+    private InventoryItem resultCalcul;
     
     [SerializeField]
     private List<Sprite> sprites;
@@ -27,7 +25,7 @@ public class InventoryModel : ScriptableObject
         inventoryItems = new List<InventoryItem>();
         operationItems = new List<InventoryItem>(2);
         for(int i = 0; i<Size;i++){
-                inventoryItems.Add(InventoryItem.GetEmptyItem());
+            inventoryItems.Add(InventoryItem.GetEmptyItem());
         }
         operationItems.Add(InventoryItem.GetEmptyItem());
         operationItems.Add(InventoryItem.GetEmptyItem());
@@ -35,7 +33,7 @@ public class InventoryModel : ScriptableObject
     public int AddItem(ItemModel item){
         for(int i = 0; i<inventoryItems.Count;i++){
             if(inventoryItems[i].IsEmpty){
-                inventoryItems[i] = new InventoryItem{
+                inventoryItems[i] = new InventoryItem (null){
                     item = item
                 };
                 return 0;
@@ -70,95 +68,93 @@ public class InventoryModel : ScriptableObject
     }
 
     public void fill(int index){
-        for(int i = 0;i<operationItems.Count;i++){
+        for(int i = 0;i<3;i++){
             if(operationItems[i].IsEmpty){
                 operationItems[i] = inventoryItems[index];
-                Debug.Log("fill ok");
                 inventoryItems[index] = InventoryItem.GetEmptyItem();
                 break;
             }
         }
-        InformAboutChange();
     }
 
     public void getBack(int index){
         if(inventoryItems[index].IsEmpty){
-            foreach(InventoryItem item in operationItems){
-                if(item.IsEmpty == false){
-                    inventoryItems[index] = item;
-                    operationItems[index] = InventoryItem.GetEmptyItem();
+            for(int i = 0;i<3;i++){
+                if(operationItems[i].IsEmpty == false){
+                    inventoryItems[index] = operationItems[i];
+                    operationItems[i] = InventoryItem.GetEmptyItem();
                     break;
                 }
             }
         }
-        InformAboutChange();
     }
 
-    public void LeftClick(int index){
-        if(inventoryItems[index].IsEmpty){
-            getBack(index);
-            Debug.Log("leftClick");
-        }
-        else{
-            fill(index);
-            Debug.Log("leftClick else");
-        }
+    public void LeftClick(int index, OpenAltar currentAltar){
+        if(currentAltar !=null){
+            if(inventoryItems[index].IsEmpty){
+                getBack(index);
+            }
+            else{
+                fill(index);
+            }
 
-        if (operationItems.Count >= 2 && operationItems[0].IsEmpty == false && operationItems[1].IsEmpty == false)
-        {
-            foreach (InventoryItem item in inventoryItems)
+            int result = 0;
+            if (operationItems.Count >= 2 && operationItems[0].IsEmpty == false && operationItems[1].IsEmpty == false)
             {
-                Sprite valid_sprite = null;
-                foreach (Sprite sprite in sprites)
-                {
-                    if ("number_" + Calcul() == sprite.name)
-                    {
-                        valid_sprite = sprite;
-                        break;
-                    }
+                result = Calcul(currentAltar);
 
-                    foreach (InventoryItem item2 in inventoryItems)
+                    foreach (Sprite sprite in sprites)
                     {
-                        if (item2.IsEmpty)
+                        if ("number_" + result == sprite.name)
                         {
-                            item2.item.sprite = valid_sprite;
+                            resultCalcul = new InventoryItem(sprite);
                             break;
                         }
                     }
-                }
-            }
-        }
-
+                        for(int i = 0;i<inventoryItems.Count;i++)
+                        {
+                            if (inventoryItems[i].IsEmpty)
+                            {
+                                inventoryItems[i] = resultCalcul;
+                                operationItems[0] = InventoryItem.GetEmptyItem();
+                                operationItems[1] = InventoryItem.GetEmptyItem();
+                                break;
+                            }
+                        }
+                    }
         InformAboutChange();
+        }
     }
 
-    public int Calcul(){
+    public int Calcul(OpenAltar currentAltar){
             string number1 = operationItems[0].item.sprite.name;
             string number2 = operationItems[1].item.sprite.name;
             int nb1 = Int32.Parse(number1.Substring(number1.Length -1,1));
             int nb2 = Int32.Parse(number2.Substring(number2.Length -1,1));
             int result = 0;
-            switch(altar.getSprite().name){
-                case "symbol_addition":
-                    result = nb1 + nb2;
-                    break;
-                case "symbol_division":
-                    if(nb1%nb2 == 0)
-                    result = nb1/nb2;
-                    else result =  -1;
-                    break;
-                case "symbol_substraction":
-                    if(nb1-nb2 <0) result = -1;
-                    else result =  nb1-nb2;
-                    break;
-                case "letter_x":
-                    result = nb1*nb2;
-                    break;
+            if(currentAltar != null){
+                switch(currentAltar.getSprite().name){
+                    case "symbol_addition":
+                        result = nb1 + nb2;
+                        break;
+                    case "symbol_division":
+                        if(nb1%nb2 == 0)
+                        result = nb1/nb2;
+                        else result =  -1;
+                        break;
+                    case "symbol_substraction":
+                        if(nb1-nb2 <0) result = -1;
+                        else result =  nb1-nb2;
+                        break;
+                    case "letter_x":
+                        result = nb1*nb2;
+                        break;
+                }
+                InformAboutChange();
             }
-            InformAboutChange();
-            if(result < 10) return(result);
-            else return(9);
-    
+                if(result < 10) return(result);
+                else return(9);
+            
     }
 
     public void InformAboutChange(){
@@ -174,17 +170,16 @@ public class InventoryModel : ScriptableObject
 }
 
 [Serializable]
-public struct InventoryItem{
+public class InventoryItem{
     public ItemModel item;
     public bool IsEmpty => item == null;
 
-    public InventoryItem addItem(){
-        return new InventoryItem{
-            item = this.item
-        };
+    public InventoryItem(Sprite sprite){
+        this.item = new ItemModel();
+        this.item.sprite = sprite;
     }
 
-    public static InventoryItem GetEmptyItem() => new InventoryItem {
+    public static InventoryItem GetEmptyItem() => new InventoryItem (null) {
         item = null
     };
 }

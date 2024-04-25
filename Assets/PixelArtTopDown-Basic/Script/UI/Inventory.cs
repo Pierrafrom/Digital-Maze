@@ -36,6 +36,12 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public void updateItemList(Dictionary<int,InventoryItem> inventoryState){
+        foreach(var item in inventoryState){
+            UpdateData(item.Key,item.Value.item.sprite);
+        }
+    }
+
     public void ResetAllItems(){
         foreach(var item in itemList){
             item.ResetData();
